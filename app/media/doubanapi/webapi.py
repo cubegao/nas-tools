@@ -87,7 +87,7 @@ class DoubanWeb(object):
             }
         },
         "wish": {
-            "list": "//div[@class='grid-view']/div[@class='item']",
+            "list": "//div[@class='grid-view']/div[@class='item comment-item']",
             "item": {
                 "title": "./div[@class='info']/ul/li[@class='title']/a/em/text()",
                 "cover": "./div[@class='pic']/a/img/@src",
