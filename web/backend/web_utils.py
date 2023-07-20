@@ -1,3 +1,4 @@
+from functools import lru_cache
 import cn2an
 
 from app.media import Media, Bangumi, DouBan
@@ -46,9 +47,9 @@ class WebUtils:
         """
         try:
             version_res = RequestUtils(proxies=Config().get_proxies()).get_res(
-                "https://api.github.com/repos/NAStool/nas-tools/releases/latest")
+                "https://api.github.com/repos/jxxghp/nas-tools/releases/latest")
             commit_res = RequestUtils(proxies=Config().get_proxies()).get_res(
-                "https://api.github.com/repos/NAStool/nas-tools/commits/master")
+                "https://api.github.com/repos/jxxghp/nas-tools/commits/master")
             if version_res and commit_res:
                 ver_json = version_res.json()
                 commit_json = commit_res.json()
@@ -155,3 +156,17 @@ class WebUtils:
                     tmp_info.title = "%s 第%s集" % (tmp_info.title, meta_info.begin_episode)
                 medias.append(tmp_info)
         return medias
+
+    @staticmethod
+    @lru_cache(maxsize=128)
+    def request_cache(url):
+        """
+        带缓存的请求
+        """
+        if url.find('douban'):
+            ret = RequestUtils(referer="https://movie.douban.com").get_res(url)
+        else:
+            ret = RequestUtils().get_res(url)
+        if ret:
+            return ret.content
+        return None
